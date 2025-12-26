@@ -1,5 +1,6 @@
 from .neuron import Neuron
 from .activation import Activation
+from typing import Optional
 
 
 class Layer:
@@ -13,7 +14,13 @@ class Layer:
         self.neurons: list[Neuron] = neurons
 
     def __repr__(self):
-        return f"Layer(neurons={len(self.neurons)})"
+        return f"Layer(neurons={self.neurons})"
+
+    def __len__(self):
+        return len(self.neurons)
+
+    def copyWith(self, neurons: Optional[list[Neuron]] = None):
+        return Layer(neurons=self.neurons if neurons is None else neurons)
 
 
 class Dense(Layer):

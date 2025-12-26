@@ -8,8 +8,8 @@ y_train = [0, 1, 0]
 
 model = Model()
 
-model.add_layer(layer=Dense(number_neurons=1, activation=Linear()))  # input layer
-model.add_layer(layer=Dense(number_neurons=2, activation=SoftPlus()))  # hidden layer 1
-model.add_layer(layer=Dense(number_neurons=1, activation=Linear()))  # output layer
+model.add_layer(layer=Dense(1, activation=Linear()))  # input layer
+model.add_layer(layer=Dense(2, activation=SoftPlus()))  # hidden layer 1
+model.add_layer(layer=Dense(1, activation=Linear()))  # output layer
 
 model.fit(x_train=x_train, y_train=y_train)

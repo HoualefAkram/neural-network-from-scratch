@@ -36,6 +36,9 @@ class Model:
         # TODO: Train
         ...
 
+    def predict(self, x_test: float):  # TODO: Predict
+        ...
+
 
 def he_weight(layer_len):
     sigma: float = sqrt(2 / layer_len)

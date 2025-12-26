@@ -9,4 +9,4 @@ class Neuron:
         self.activation: Activation = activation
 
     def __repr__(self):
-        return f"Neuron(bias={self.bias},activation={type(self.ctivation)})"
+        return f"Neuron(bias={self.bias},activation={type(self.activation)})"

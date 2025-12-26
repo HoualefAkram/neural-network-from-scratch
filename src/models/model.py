@@ -11,6 +11,6 @@ class Model:
     def add_layer(self, layer: Layer):
         self.layers.append(layer)
 
-    def train(self):
+    def fit(self, x_train: list[float], y_train: list[float]):
         # TODO: Train
         ...

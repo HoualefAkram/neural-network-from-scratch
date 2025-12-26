@@ -1,9 +1,9 @@
-from typing import Callable
+from typing import Callable, Optional
 from math import log, exp
 
 
 class Activation:
-    def __init__(self, func: Callable[[float], float]):
+    def __init__(self, func: Optional[Callable[[float], float]]):
         self.func: Callable[[float], float] = func
 
     def call(self, x):
@@ -26,3 +26,8 @@ class ReLU(Activation):
 
     def __init__(self):
         super().__init__(func=self.__func)
+
+
+class Linear(Activation):
+    def __init__(self):
+        super().__init__(func=None)  # Default is f(x) = x

@@ -1,6 +1,9 @@
 from .neuron import Neuron
 from .activation import Activation
+from .link import Link
 from typing import Optional
+import random
+from math import sqrt
 
 
 class Layer:
@@ -21,6 +24,29 @@ class Layer:
 
     def copyWith(self, neurons: Optional[list[Neuron]] = None):
         return Layer(neurons=self.neurons if (neurons is None) else neurons)
+
+    def add_links(self, previous_layer_len: int):
+        if not previous_layer_len:
+            return self
+        new_neurons: list[Neuron] = []
+        for i in range(len(self)):
+            neuron: Neuron = self.neurons[i].copyWith(
+                input_links=[
+                    Link(weight=he_weight(fan_in=previous_layer_len))
+                    for _ in range(previous_layer_len)
+                ]
+            )
+            new_neurons.append(neuron)
+
+        updated_layer: Layer = self.copyWith(neurons=new_neurons)
+        return updated_layer
+
+
+def he_weight(fan_in):
+    sigma: float = sqrt(2 / fan_in)
+    mu: float = 0
+    random_weight: float = random.gauss(mu=mu, sigma=sigma)
+    return random_weight
 
 
 class Dense(Layer):

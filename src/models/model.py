@@ -36,8 +36,10 @@ class Model:
         # TODO: Train
         ...
 
-    def predict(self, x_test: float):  # TODO: Predict
-        ...
+    def predict(self, x_test: float):  # TODO: Prediction
+        for l in self.layers:
+            for n in l.neurons:
+                ...
 
 
 def he_weight(layer_len):

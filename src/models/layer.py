@@ -20,7 +20,7 @@ class Layer:
         return len(self.neurons)
 
     def copyWith(self, neurons: Optional[list[Neuron]] = None):
-        return Layer(neurons=self.neurons if neurons is None else neurons)
+        return Layer(neurons=self.neurons if (neurons is None) else neurons)
 
 
 class Dense(Layer):

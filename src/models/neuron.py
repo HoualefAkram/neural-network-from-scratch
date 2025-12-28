@@ -35,6 +35,7 @@ class Neuron:
         )
 
     def get_value(self):
+        # needed if the input is the value of the neuron
         if self.value is not None:
             return self.value
 

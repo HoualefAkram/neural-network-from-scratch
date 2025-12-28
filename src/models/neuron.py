@@ -49,6 +49,9 @@ class Neuron:
         )
         return self.activation(z)
 
+    def set_value(self, value):
+        self.value = value
+
 
 class NeuronProxy:
     _counter: int = 0

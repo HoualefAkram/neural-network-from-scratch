@@ -20,5 +20,11 @@ class Model:
         # TODO: Train
         ...
 
-    def predict(self, x_test: float):  # TODO: Prediction
-        ...
+    def predict(self, x_test: list[float]):
+        # 1- feed the input to the first layer
+        first_layer: Layer = self.layers[0]
+        if len(x_test) != len(first_layer):
+            raise ValueError("length of x_test must be equal to the first layer length")
+        for i in range(len(x_test)):
+            first_layer.neurons[i].set_value(x_test[i])
+        # 2- forward passing

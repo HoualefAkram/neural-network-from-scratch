@@ -17,15 +17,11 @@ model.fit(x_train=x_train, y_train=y_train)
 
 neuron1 = model.layers[0].neurons[0]
 
+
 neuron2 = model.layers[1].neurons[0]
 neuron3 = model.layers[1].neurons[1]
 
 neuron4 = model.layers[2].neurons[0]
 
-print(neuron1.input_links)
 
-print(neuron2.input_links)
-
-print(neuron3.input_links)
-
-print(neuron4.input_links)
+model.predict(x_test=[2])

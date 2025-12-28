@@ -23,5 +23,7 @@ neuron3 = model.layers[1].neurons[1]
 
 neuron4 = model.layers[2].neurons[0]
 
+print(neuron4)
 
-model.predict(x_test=[2])
+prediction = model.predict(x_test=[2])
+print(prediction)

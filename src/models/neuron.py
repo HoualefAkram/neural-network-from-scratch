@@ -20,7 +20,7 @@ class Neuron:
         self.input_links: list[Link] = input_links
 
     def __repr__(self):
-        return f"Neuron(id={self.id},bias={self.bias},activation={type(self.activation)}, input_links={len(self.input_links) if self.input_links is not None else "None"})"
+        return f"Neuron(id={self.id},bias={self.bias},activation={type(self.activation)}, input_links={self.input_links})"
 
     def copyWith(
         self,
@@ -40,14 +40,14 @@ class Neuron:
 
     def get_value(self):
         # needed if the input is the value of the neuron
-        if self.value is not None:
+        if self.input_links is None:
             return self.value
 
         z = (
             sum(il.weight * il.source.get_value() for il in self.input_links)
             + self.bias
         )
-        return self.activation(z)
+        return self.activation.call(z)
 
     def set_value(self, value):
         self.value = value

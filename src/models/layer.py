@@ -1,4 +1,4 @@
-from .neuron import Neuron
+from .neuron import Neuron, NeuronProxy
 from .activation import Activation
 from .link import Link
 from typing import Optional
@@ -59,5 +59,8 @@ class Dense(Layer):
         number_neurons: int,
         activation: Activation,
     ):
-        neurons = [Neuron(bias=0, activation=activation) for _ in range(number_neurons)]
+        neurons = [
+            NeuronProxy.create(bias=0, activation=activation)
+            for _ in range(number_neurons)
+        ]
         super().__init__(neurons=neurons)

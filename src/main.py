@@ -21,3 +21,11 @@ neuron2 = model.layers[1].neurons[0]
 neuron3 = model.layers[1].neurons[1]
 
 neuron4 = model.layers[2].neurons[0]
+
+print(neuron1.input_links)
+
+print(neuron2.input_links)
+
+print(neuron3.input_links)
+
+print(neuron4.input_links)

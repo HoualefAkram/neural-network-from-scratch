@@ -5,4 +5,4 @@ class Link:
         self.source = source
 
     def __repr__(self):
-        return f"Link(w:{self.weight})"
+        return f"Link(weight:{self.weight}, source:{self.source})"

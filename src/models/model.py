@@ -1,4 +1,5 @@
 from .layer import Layer
+from .error import Mse
 
 
 class Model:
@@ -17,10 +18,10 @@ class Model:
         self.layers.append(updated_layer)
 
     def fit(self, x_train: list[float], y_train: list[float]):
-        # TODO: Train
+        # TODO: Train (Backpropagation)
         ...
 
-    def predict(self, x_test: list[float]) -> float | list[float]:
+    def predict(self, x_test: list[float]) -> list[float]:
         # 1- feed the input to the first layer
         first_layer: Layer = self.layers[0]
         if len(x_test) != len(first_layer):
@@ -28,5 +29,5 @@ class Model:
         for i in range(len(x_test)):
             first_layer.neurons[i].set_value(x_test[i])
         # 2- forward passing
-        last_neuron_value = self.layers[-1].neurons[0].get_value()
-        return last_neuron_value
+        last_layer_neurons = self.layers[-1].neurons
+        return [lln.get_value() for lln in last_layer_neurons]

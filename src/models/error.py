@@ -3,7 +3,7 @@ class Error:
         raise NotImplementedError
 
 
-class MSE(Error):
+class Mse(Error):
     def calc(self, predicted_outputs: list[float], outputs: list[float]) -> float:
         if len(predicted_outputs) != len(outputs):
             raise ValueError("Input lists must have the same length")

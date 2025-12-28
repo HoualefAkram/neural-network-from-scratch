@@ -18,10 +18,21 @@ class Model:
         updated_layer: Layer = layer.add_links(previous_layer=last_layer)
         self.layers.append(updated_layer)
 
+    @property
+    def shape(self):
+        # return (weight_count, bias_count)
+        b_count = sum(
+            len(layer) for layer in self.layers if layer.neurons[0].bias is not None
+        )
+        w_count = sum(
+            len(self.layers[i]) * len(self.layers[i + 1])
+            for i in range(len(self.layers) - 1)
+        )
+        return w_count, b_count
+
     def __traverse_neuron_backward(self, neuron: Neuron):
         if neuron.input_links:
             for il in neuron.input_links:
-                print(il.weight)
                 self.__traverse_neuron_backward(il.source)
 
     def fit(self, x_train: list[float], y_train: list[float]):

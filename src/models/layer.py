@@ -25,15 +25,19 @@ class Layer:
     def copyWith(self, neurons: Optional[list[Neuron]] = None):
         return Layer(neurons=self.neurons if (neurons is None) else neurons)
 
-    def add_links(self, previous_layer_len: int):
-        if not previous_layer_len:
+    def add_links(self, previous_layer):
+        if not len(previous_layer):
             return self
         new_neurons: list[Neuron] = []
         for i in range(len(self)):
-            neuron: Neuron = self.neurons[i].copyWith(
+            current_neuron = self.neurons[i]
+            neuron: Neuron = current_neuron.copyWith(
                 input_links=[
-                    Link(weight=he_weight(fan_in=previous_layer_len))
-                    for _ in range(previous_layer_len)
+                    Link(
+                        weight=he_weight(fan_in=len(previous_layer)),
+                        source=previous_layer.neurons[prev_idx],
+                    )
+                    for prev_idx in range(len(previous_layer))
                 ]
             )
             new_neurons.append(neuron)

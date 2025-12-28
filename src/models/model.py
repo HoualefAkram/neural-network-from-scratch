@@ -13,7 +13,7 @@ class Model:
             self.layers.append(layer)
             return
         last_layer: Layer = self.layers[-1]
-        updated_layer: Layer = layer.add_links(previous_layer_len=len(last_layer))
+        updated_layer: Layer = layer.add_links(previous_layer=last_layer)
         self.layers.append(updated_layer)
 
     def fit(self, x_train: list[float], y_train: list[float]):

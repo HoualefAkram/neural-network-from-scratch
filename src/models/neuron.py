@@ -10,7 +10,7 @@ class Neuron:
         bias: float,
         activation: Activation,
         value: Optional[float] = None,
-        input_links: Optional[list[Link]] = [],
+        input_links: Optional[list[Link]] = None,
     ):
         self.value = value
         self.bias: float = bias
@@ -33,3 +33,13 @@ class Neuron:
             bias=self.bias if (bias is None) else bias,
             activation=self.activation if (activation is None) else activation,
         )
+
+    def get_value(self):
+        if self.value is not None:
+            return self.value
+
+        z = (
+            sum(il.weight * il.source.get_value() for il in self.input_links)
+            + self.bias
+        )
+        return self.activation(z)

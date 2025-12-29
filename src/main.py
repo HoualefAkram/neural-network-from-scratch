@@ -13,6 +13,6 @@ model.add_layer(layer=Dense(2, activation=SoftPlus()))  # hidden layer 1
 model.add_layer(layer=Dense(1, activation=Linear()))  # output layer
 
 
-model.fit(x_train=x_train, y_train=y_train)
+model.fit(x_train=x_train, y_train=y_train, iterations=1000, learning_rate=1e-2)
 
 prediction = model.predict(x_test=[0.3])

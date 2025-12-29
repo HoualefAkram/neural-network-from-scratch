@@ -38,19 +38,24 @@ class Model:
         predicted_outputs = self.__predict_multiple(inputs)
         return Mse.calc(predicted_outputs=predicted_outputs, outputs=outputs)
 
-    def fit(self, x_train: list[list[float]], y_train: list[list[float]]):
+    def fit(
+        self,
+        x_train: list[list[float]],
+        y_train: list[list[float]],
+        iterations: int,
+        learning_rate: float,
+    ):
         # TODO: Train (Backpropagation)
         h = 1e-6
-        lr = 1e-2
         b3_neuron = self.layers[-1].neurons[0]
-        for i in range(1000):
+        for i in range(iterations):
             mse_before = self.__get_mse(inputs=x_train, outputs=y_train)
             b3_neuron.bias += h
             mse_after = self.__get_mse(inputs=x_train, outputs=y_train)
             b3_neuron.bias -= h
             gradient = (mse_after - mse_before) / h
-            b3_neuron.bias = b3_neuron.bias - gradient * lr
-            if i == 0 or i == 999:
+            b3_neuron.bias = b3_neuron.bias - gradient * learning_rate
+            if i == 0 or i == iterations - 1:
                 print(f"mse({i}): {mse_before}")
 
     def predict(self, x_test: list[float]) -> list[float]:

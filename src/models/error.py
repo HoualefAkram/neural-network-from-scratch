@@ -1,13 +1,18 @@
 class Error:
-    def calc(self, predicted_outputs: list[float], outputs: list[float]) -> float:
+
+    @staticmethod
+    def calc(predicted_outputs: list[float], outputs: list[float]) -> float:
         raise NotImplementedError
 
-    def de_dp(self, predicted_outputs: list[float], outputs: list[float]):
+    @staticmethod
+    def de_dp(predicted_outputs: list[float], outputs: list[float]):
         raise NotImplementedError
 
 
 class Mse(Error):
-    def calc(self, predicted_outputs: list[float], outputs: list[float]) -> float:
+
+    @staticmethod
+    def calc(predicted_outputs: list[list[float]], outputs: list[list[float]]) -> float:
         if len(predicted_outputs) != len(outputs):
             raise ValueError("Input lists must have the same length")
 
@@ -15,13 +20,9 @@ class Mse(Error):
         if n == 0:
             raise ValueError("Input lists must not be empty")
 
-        return sum((p - o) ** 2 for p, o in zip(predicted_outputs, outputs)) / n
-
-    def de_dp(self, predicted_outputs: list[float], outputs: list[float]):
-        if len(predicted_outputs) != len(outputs):
-            raise ValueError("Input lists must have the same length")
-
-        n = len(predicted_outputs)
-        if n == 0:
-            raise ValueError("Input lists must not be empty")
-        return sum((p - o) for p, o in zip(predicted_outputs, outputs)) * (2 / n)
+        total = 0.0
+        for p_list, o_list in zip(predicted_outputs, outputs):
+            if len(p_list) != len(o_list):
+                raise ValueError("predicted/output values must be the same length")
+            total += sum((p_val - o_val) ** 2 for p_val, o_val in zip(p_list, o_list))
+        return total / n

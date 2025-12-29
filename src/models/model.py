@@ -30,17 +30,17 @@ class Model:
         )
         return w_count, b_count
 
-    def __traverse_neuron_backward(self, neuron: Neuron):
-        if neuron.input_links:
-            for il in neuron.input_links:
-                self.__traverse_neuron_backward(il.source)
+    def __predict_multiple(self, inputs: list[list[float]]) -> list[list[float]]:
+        return [self.predict(x) for x in inputs]
 
-    def fit(self, x_train: list[float], y_train: list[float]):
+    def __get_mse(self, inputs: list[list[float]], outputs: list[list[float]]):
+        predicted_outputs = self.__predict_multiple(inputs)
+        return Mse.calc(predicted_outputs=predicted_outputs, outputs=outputs)
+
+    def fit(self, x_train: list[list[float]], y_train: list[list[float]]):
         # TODO: Train (Backpropagation)
-        # go to last Neuron, find its input_links, for each input link to the same until reaching the start point
-        last_layer_neurons = self.layers[-1].neurons
-        for neuron in last_layer_neurons:
-            self.__traverse_neuron_backward(neuron=neuron)
+        mse = self.__get_mse(inputs=x_train, outputs=y_train)
+        print(f"mse: {mse}")
 
     def predict(self, x_test: list[float]) -> list[float]:
         # 1- feed the input to the first layer

@@ -1,10 +1,10 @@
+from typing import Optional
 from .layer import Layer
-from .neuron import Neuron
 from .error import Mse
 
 
 class Model:
-    def __init__(self, layers: list[Layer] = []):
+    def __init__(self, layers: Optional[list[Layer]] = None):
         self.layers: list[Layer] = layers
 
     def __repr__(self):
@@ -12,6 +12,7 @@ class Model:
 
     def add_layer(self, layer: Layer):
         if not self.layers:
+            self.layers = []
             self.layers.append(layer)
             return
         last_layer: Layer = self.layers[-1]

@@ -39,8 +39,18 @@ class Model:
 
     def fit(self, x_train: list[list[float]], y_train: list[list[float]]):
         # TODO: Train (Backpropagation)
-        mse = self.__get_mse(inputs=x_train, outputs=y_train)
-        print(f"mse: {mse}")
+        h = 1e-6
+        lr = 1e-2
+        b3_neuron = self.layers[-1].neurons[0]
+        for i in range(1000):
+            mse_before = self.__get_mse(inputs=x_train, outputs=y_train)
+            b3_neuron.bias += h
+            mse_after = self.__get_mse(inputs=x_train, outputs=y_train)
+            b3_neuron.bias -= h
+            gradient = (mse_after - mse_before) / h
+            b3_neuron.bias = b3_neuron.bias - gradient * lr
+            if i == 0 or i == 999:
+                print(f"mse({i}): {mse_before}")
 
     def predict(self, x_test: list[float]) -> list[float]:
         # 1- feed the input to the first layer

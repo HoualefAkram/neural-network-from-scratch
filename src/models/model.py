@@ -85,7 +85,7 @@ class Model:
     ):
         if neuron.input_links and neuron.id not in traversed_neurons_ids:
             traversed_neurons_ids.append(neuron.id)
-            # optimize bias with once
+            # optimize bias once
             mse_before = self.__get_mse(inputs=x_train, outputs=y_train)
             neuron.bias += self.__h
             mse_after = self.__get_mse(inputs=x_train, outputs=y_train)

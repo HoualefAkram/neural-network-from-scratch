@@ -3,8 +3,8 @@ from models.model import Model
 from models.layer import Input, Dense
 from models.activation import SoftPlus, Linear
 
-x_train = [[0], [0], [1], [2], [4], [7]]
-y_train = [[0], [1], [0], [-1], [-2], [-2]]
+x_train = [[0], [1], [2], [4], [7]]
+y_train = [[0], [0], [-1], [-2], [-2]]
 SHOW_GRAPH = True
 
 model = Model()
@@ -15,7 +15,7 @@ model.add_layer(layer=Dense(4, activation=SoftPlus()))  # hidden layer 2
 model.add_layer(layer=Dense(1, activation=Linear()))  # output layer
 
 
-model.fit(x_train=x_train, y_train=y_train, iterations=10000, learning_rate=0.1)
+model.fit(x_train=x_train, y_train=y_train, iterations=15000, learning_rate=0.1)
 
 
 if SHOW_GRAPH:

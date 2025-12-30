@@ -1,0 +1,13 @@
+"filename", "language", "Python", "comment", "blank", "total"
+"d:\dev\Python\projects\personal\ai\neural networks\src\__init__.py", "Python", 0, 0, 1, 1
+"d:\dev\Python\projects\personal\ai\neural networks\src\main.py", "Python", 36, 1, 10, 47
+"d:\dev\Python\projects\personal\ai\neural networks\src\models\__init__.py", "Python", 0, 0, 1, 1
+"d:\dev\Python\projects\personal\ai\neural networks\src\models\activation.py", "Python", 22, 0, 12, 34
+"d:\dev\Python\projects\personal\ai\neural networks\src\models\error.py", "Python", 21, 0, 8, 29
+"d:\dev\Python\projects\personal\ai\neural networks\src\models\layer.py", "Python", 64, 0, 15, 79
+"d:\dev\Python\projects\personal\ai\neural networks\src\models\link.py", "Python", 6, 0, 3, 9
+"d:\dev\Python\projects\personal\ai\neural networks\src\models\model.py", "Python", 136, 7, 15, 158
+"d:\dev\Python\projects\personal\ai\neural networks\src\models\neuron.py", "Python", 66, 1, 14, 81
+"d:\dev\Python\projects\personal\ai\neural networks\src\utils\__init__.py", "Python", 0, 0, 1, 1
+"d:\dev\Python\projects\personal\ai\neural networks\src\utils\derivative.py", "Python", 8, 0, 4, 12
+"Total", "-", 359, 9, 84, 452

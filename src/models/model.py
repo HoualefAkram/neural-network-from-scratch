@@ -126,6 +126,7 @@ class Model:
         mse_before = self.__get_mse(inputs=x_train, outputs=y_train)
         last_layer: Layer = self.layers[-1]
         for i in range(iterations):
+            print(f"iteration: {i}/{iterations}")
             output_biases = []
             output_weights = []
             for neuron in last_layer.neurons:

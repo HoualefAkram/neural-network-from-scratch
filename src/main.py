@@ -14,16 +14,15 @@ model.add_layer(layer=Dense(2, activation=SoftPlus()))  # hidden layer 1
 model.add_layer(layer=Dense(1, activation=Linear()))  # output layer
 
 
-model.fit(x_train=x_train, y_train=y_train, iterations=1000, learning_rate=1e-2)
-
-prediction = model.predict(x_test=[0.5])
-print(prediction)
+model.fit(x_train=x_train, y_train=y_train, iterations=20000, learning_rate=0.1)
 
 
 if SHOW_GRAPH:
     from matplotlib import pyplot as plt
 
-    x_axis = [i / 10 for i in range(10)]
-    y_axis = [model.predict([x]) for x in x_axis]
+    x_axis = [i / 10 for i in range(11)]
+    y_axis = [model.predict([x])[0] for x in x_axis]
+
     plt.plot(x_axis, y_axis)
+    plt.scatter([x[0] for x in x_train], [y[0] for y in y_train])
     plt.show()

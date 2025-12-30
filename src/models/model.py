@@ -44,13 +44,44 @@ class Model:
         predicted_outputs = self.__predict_multiple(inputs)
         return Mse.calc(predicted_outputs=predicted_outputs, outputs=outputs)
 
+    def __update_tree_from_neuron(
+        self,
+        neuron: Neuron,
+        new_weights: list[float],
+        new_biases: list[float],
+        updated_neurons_ids: list[id],
+    ):
+        if neuron.input_links and neuron.id not in updated_neurons_ids:
+            updated_neurons_ids.append(neuron.id)
+            neuron.bias = new_biases.pop(0)
+            for il in neuron.input_links:
+                il.weight = new_weights.pop(0)
+                self.__update_tree_from_neuron(
+                    neuron=il.source,
+                    new_weights=new_weights,
+                    new_biases=new_biases,
+                    updated_neurons_ids=updated_neurons_ids,
+                )
+
+    def __update_model_params(self, new_weights: list[float], new_biases: list[float]):
+        last_layer: Layer = self.layers[-1]
+        for neuron in last_layer.neurons:
+            self.__update_tree_from_neuron(
+                neuron=neuron,
+                new_weights=new_weights,
+                new_biases=new_biases,
+                updated_neurons_ids=[],
+            )
+
     def __optimize_neuron_tree_once(
         self,
         neuron: Neuron,
         x_train: list[list[float]],
         y_train: list[list[float]],
         learning_rate: float,
-        traversed_neurons_ids: list[id],
+        traversed_neurons_ids: list[int],
+        output_biases: list[float],
+        output_weights: list[list],
     ):
         if neuron.input_links and neuron.id not in traversed_neurons_ids:
             traversed_neurons_ids.append(neuron.id)
@@ -60,7 +91,8 @@ class Model:
             mse_after = self.__get_mse(inputs=x_train, outputs=y_train)
             neuron.bias -= self.__h
             gradient = (mse_after - mse_before) / self.__h
-            neuron.bias = neuron.bias - gradient * learning_rate
+            new_bias = neuron.bias - gradient * learning_rate
+            output_biases.append(new_bias)
             # optimize input weights once
             for il in neuron.input_links:
                 mse_before = self.__get_mse(inputs=x_train, outputs=y_train)
@@ -68,7 +100,8 @@ class Model:
                 mse_after = self.__get_mse(inputs=x_train, outputs=y_train)
                 il.weight -= self.__h
                 gradient = (mse_after - mse_before) / self.__h
-                il.weight = il.weight - gradient * learning_rate
+                new_weight = il.weight - gradient * learning_rate
+                output_weights.append(new_weight)
                 # move to the next neuron attached to the link
                 self.__optimize_neuron_tree_once(
                     neuron=il.source,
@@ -76,7 +109,11 @@ class Model:
                     y_train=y_train,
                     learning_rate=learning_rate,
                     traversed_neurons_ids=traversed_neurons_ids,
+                    output_biases=output_biases,
+                    output_weights=output_weights,
                 )
+        else:
+            return output_weights, output_biases
 
     def fit(
         self,
@@ -86,19 +123,24 @@ class Model:
         learning_rate: float,
     ):
         # TODO: Train
-        freezed_model = self.copyWith()
-        mse_before = freezed_model.__get_mse(inputs=x_train, outputs=y_train)
-        last_layer: Layer = freezed_model.layers[-1]
+        mse_before = self.__get_mse(inputs=x_train, outputs=y_train)
+        last_layer: Layer = self.layers[-1]
         for i in range(iterations):
+            output_biases = []
+            output_weights = []
             for neuron in last_layer.neurons:
-                freezed_model.__optimize_neuron_tree_once(
+                self.__optimize_neuron_tree_once(
                     neuron=neuron,
                     x_train=x_train,
                     y_train=y_train,
                     learning_rate=learning_rate,
                     traversed_neurons_ids=[],
+                    output_biases=output_biases,
+                    output_weights=output_weights,
                 )
-            self = self.copyWith(layers=freezed_model.layers)
+            self.__update_model_params(
+                new_weights=output_weights, new_biases=output_biases
+            )
         mse_after = self.__get_mse(inputs=x_train, outputs=y_train)
         print(f"mse_before: {mse_before}, mse_after: {mse_after}")
 

@@ -1,11 +1,17 @@
 from typing import Optional
 from .layer import Layer
 from .error import Mse
+from .neuron import Neuron
 
 
 class Model:
+
     def __init__(self, layers: Optional[list[Layer]] = None):
         self.layers: list[Layer] = layers
+        self.__h = 1e-6
+
+    def copyWith(self, layers: Optional[list[Layer]] = None):
+        return Model(layers=list(self.layers) if layers is None else layers)
 
     def __repr__(self):
         return f"Model(layers={self.layers})"
@@ -38,6 +44,40 @@ class Model:
         predicted_outputs = self.__predict_multiple(inputs)
         return Mse.calc(predicted_outputs=predicted_outputs, outputs=outputs)
 
+    def __optimize_neuron_tree_once(
+        self,
+        neuron: Neuron,
+        x_train: list[list[float]],
+        y_train: list[list[float]],
+        learning_rate: float,
+        traversed_neurons_ids: list[id],
+    ):
+        if neuron.input_links and neuron.id not in traversed_neurons_ids:
+            traversed_neurons_ids.append(neuron.id)
+            # optimize bias with once
+            mse_before = self.__get_mse(inputs=x_train, outputs=y_train)
+            neuron.bias += self.__h
+            mse_after = self.__get_mse(inputs=x_train, outputs=y_train)
+            neuron.bias -= self.__h
+            gradient = (mse_after - mse_before) / self.__h
+            neuron.bias = neuron.bias - gradient * learning_rate
+            # optimize input weights once
+            for il in neuron.input_links:
+                mse_before = self.__get_mse(inputs=x_train, outputs=y_train)
+                il.weight += self.__h
+                mse_after = self.__get_mse(inputs=x_train, outputs=y_train)
+                il.weight -= self.__h
+                gradient = (mse_after - mse_before) / self.__h
+                il.weight = il.weight - gradient * learning_rate
+                # move to the next neuron attached to the link
+                self.__optimize_neuron_tree_once(
+                    neuron=il.source,
+                    x_train=x_train,
+                    y_train=y_train,
+                    learning_rate=learning_rate,
+                    traversed_neurons_ids=traversed_neurons_ids,
+                )
+
     def fit(
         self,
         x_train: list[list[float]],
@@ -45,18 +85,22 @@ class Model:
         iterations: int,
         learning_rate: float,
     ):
-        # TODO: Train (Backpropagation)
-        h = 1e-6
-        b3_neuron = self.layers[-1].neurons[0]
+        # TODO: Train
+        freezed_model = self.copyWith()
+        mse_before = freezed_model.__get_mse(inputs=x_train, outputs=y_train)
+        last_layer: Layer = freezed_model.layers[-1]
         for i in range(iterations):
-            mse_before = self.__get_mse(inputs=x_train, outputs=y_train)
-            b3_neuron.bias += h
-            mse_after = self.__get_mse(inputs=x_train, outputs=y_train)
-            b3_neuron.bias -= h
-            gradient = (mse_after - mse_before) / h
-            b3_neuron.bias = b3_neuron.bias - gradient * learning_rate
-            if i == 0 or i == iterations - 1:
-                print(f"mse({i}): {mse_before}")
+            for neuron in last_layer.neurons:
+                freezed_model.__optimize_neuron_tree_once(
+                    neuron=neuron,
+                    x_train=x_train,
+                    y_train=y_train,
+                    learning_rate=learning_rate,
+                    traversed_neurons_ids=[],
+                )
+            self = self.copyWith(layers=freezed_model.layers)
+        mse_after = self.__get_mse(inputs=x_train, outputs=y_train)
+        print(f"mse_before: {mse_before}, mse_after: {mse_after}")
 
     def predict(self, x_test: list[float]) -> list[float]:
         # 1- feed the input to the first layer
